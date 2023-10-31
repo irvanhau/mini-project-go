@@ -18,14 +18,22 @@ func New(db *gorm.DB) medicines.MedicineDataInterface {
 	}
 }
 
-func (md *MedicineData) GetAll() ([]medicines.MedicineInfo, error) {
+func (md *MedicineData) GetAll(kategori int, name string) ([]medicines.MedicineInfo, error) {
 	var listMedicine = []medicines.MedicineInfo{}
-	var qry = md.db.Table("medicines").Select("medicines.*", "medicine_categories.name as category_name").
-		Joins("JOIN medicine_categories ON medicines.category_id = medicine_categories.id").
-		Where("medicines.deleted_at is null").
-		Scan(&listMedicine)
 
-	if err := qry.Error; err != nil {
+	var qry = md.db.Table("medicines").Select("medicines.*", "medicine_categories.name as category_name", "medicine_categories.id as category_id").
+		Joins("JOIN medicine_categories ON medicines.category_id = medicine_categories.id").
+		Where("medicines.deleted_at is null")
+
+	if kategori != 0 {
+		qry.Where("category_id = ?", kategori)
+	}
+
+	if name != "" {
+		qry.Where("medicines.name LIKE ?", "%"+name+"%")
+	}
+
+	if err := qry.Scan(&listMedicine).Error; err != nil {
 		logrus.Info("DB Error : ", err.Error())
 		return nil, err
 	}

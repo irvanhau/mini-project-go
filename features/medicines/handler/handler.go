@@ -21,7 +21,11 @@ func NewHandler(service medicines.MedicineServiceInterface) medicines.MedicineHa
 
 func (mh *MedicineHandler) GetMedicines() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		result, err := mh.service.GetMedicines()
+		var paramKategori = c.QueryParam("kategori")
+		var name = c.QueryParam("name")
+		kategori, _ := strconv.Atoi(paramKategori)
+
+		result, err := mh.service.GetMedicines(kategori, name)
 
 		if err != nil {
 			c.Logger().Fatal("Handler : Get All Process Error : ", err.Error())

@@ -7,41 +7,41 @@ import (
 )
 
 type Medicine struct {
-	ID           uint
-	CategoryID   uint
-	Name         string
-	StockMinimum int
-	Stock        int
-	Price        int
-	Photo        string
-	File         string
+	ID           uint   `json:"id"`
+	CategoryID   uint   `json:"category_id"`
+	Name         string `json:"name"`
+	StockMinimum int    `json:"stock_minimum"`
+	Stock        int    `json:"stock"`
+	Price        int    `json:"price"`
+	Photo        string `json:"photo"`
+	File         string `json:"file"`
 }
 
 type MedicineInfo struct {
-	ID           uint
+	ID           uint   `json:"id"`
 	CategoryName string `json:"category_name"`
-	Name         string
-	StockMinimum int
-	Stock        int
-	Price        int
-	Photo        string
-	File         string
+	Name         string `json:"name"`
+	StockMinimum int    `json:"stock_minimum"`
+	Stock        int    `json:"stock"`
+	Price        int    `json:"price"`
+	Photo        string `json:"photo"`
+	File         string `json:"file"`
 }
 
 type UpdateMedicine struct {
-	CategoryID   uint
-	Name         string
-	StockMinimum int
-	Stock        int
-	Price        int
+	CategoryID   uint   `json:"category_id"`
+	Name         string `json:"name"`
+	StockMinimum int    `json:"stock_minimum"`
+	Stock        int    `json:"stock"`
+	Price        int    `json:"price"`
 }
 
 type MedicineFile struct {
-	File multipart.File
+	File multipart.File `json:"file"`
 }
 
 type MedicinePhoto struct {
-	Photo multipart.File
+	Photo multipart.File `json:"photo"`
 }
 
 type MedicineHandlerInterface interface {
@@ -55,7 +55,7 @@ type MedicineHandlerInterface interface {
 }
 
 type MedicineServiceInterface interface {
-	GetMedicines() ([]MedicineInfo, error)
+	GetMedicines(kategori int, name string) ([]MedicineInfo, error)
 	GetMedicine(id int) ([]MedicineInfo, error)
 	CreateMedicine(newData Medicine) (*Medicine, error)
 	UpdateMedicine(newData UpdateMedicine, id int) (bool, error)
@@ -67,7 +67,7 @@ type MedicineServiceInterface interface {
 }
 
 type MedicineDataInterface interface {
-	GetAll() ([]MedicineInfo, error)
+	GetAll(kategori int, name string) ([]MedicineInfo, error)
 	GetByID(id int) ([]MedicineInfo, error)
 	Insert(newData Medicine) (*Medicine, error)
 	Update(newData UpdateMedicine, id int) (bool, error)

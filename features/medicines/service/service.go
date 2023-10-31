@@ -16,8 +16,8 @@ func New(data medicines.MedicineDataInterface) medicines.MedicineServiceInterfac
 	}
 }
 
-func (md *MedicineService) GetMedicines() ([]medicines.MedicineInfo, error) {
-	result, err := md.data.GetAll()
+func (md *MedicineService) GetMedicines(kategori int, name string) ([]medicines.MedicineInfo, error) {
+	result, err := md.data.GetAll(kategori, name)
 
 	if err != nil {
 		return nil, errors.New("Get All Failed")
