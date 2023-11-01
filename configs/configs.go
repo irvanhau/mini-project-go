@@ -32,7 +32,7 @@ func InitConfig() *ProgramConfig {
 }
 
 func loadConfig() *ProgramConfig {
-	// var res = new(ProgramConfig)
+	var res = new(ProgramConfig)
 
 	// err := godotenv.Load(".env")
 
