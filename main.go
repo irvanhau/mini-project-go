@@ -21,6 +21,14 @@ import (
 	handlerAppointments "MiniProject/features/appointments/handler"
 	serviceAppointments "MiniProject/features/appointments/service"
 
+	dataMedicalCheckups "MiniProject/features/medical_checkups/data"
+	handlerMedicalCheckups "MiniProject/features/medical_checkups/handler"
+	serviceMedicalCheckups "MiniProject/features/medical_checkups/service"
+
+	dataMedicalCheckupDetails "MiniProject/features/medical_checkup_details/data"
+	handlerMedicalCheckupDetails "MiniProject/features/medical_checkup_details/handler"
+	serviceMedicalCheckupDetails "MiniProject/features/medical_checkup_details/service"
+
 	"MiniProject/helper"
 	"MiniProject/utils/database"
 
@@ -52,6 +60,14 @@ func main() {
 	appointmentServices := serviceAppointments.New(appointmentModel)
 	appointmentHandler := handlerAppointments.NewHandler(appointmentServices)
 
+	medicalCheckupModel := dataMedicalCheckups.New(db)
+	medicalCheckupServices := serviceMedicalCheckups.New(medicalCheckupModel)
+	medicalCheckupHandler := handlerMedicalCheckups.NewHandler(medicalCheckupServices)
+
+	medicalCheckupDetailModel := dataMedicalCheckupDetails.New(db)
+	medicalCheckupDetailServices := serviceMedicalCheckupDetails.New(medicalCheckupDetailModel)
+	medicalCheckupDetailHandler := handlerMedicalCheckupDetails.NewHandler(medicalCheckupDetailServices)
+
 	e.Pre(middleware.RemoveTrailingSlash())
 
 	e.Use(middleware.CORS())
@@ -64,6 +80,8 @@ func main() {
 	routes.RouteMedicineCategory(e, medicineCategoryHandler, *config)
 	routes.RouteMedicine(e, medicineHandler, *config)
 	routes.RouteAppointment(e, appointmentHandler, *config)
+	routes.RouteMedicalCheckup(e, medicalCheckupHandler, *config)
+	routes.RouteMedicalCheckupDetail(e, medicalCheckupDetailHandler, *config)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.ServerPort)).Error())
 }

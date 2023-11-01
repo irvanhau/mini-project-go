@@ -3,6 +3,8 @@ package routes
 import (
 	"MiniProject/configs"
 	"MiniProject/features/appointments"
+	medicalcheckupdetails "MiniProject/features/medical_checkup_details"
+	medicalcheckups "MiniProject/features/medical_checkups"
 	medicinecategories "MiniProject/features/medicine_categories"
 	"MiniProject/features/medicines"
 	"MiniProject/features/users"
@@ -41,4 +43,20 @@ func RouteAppointment(e *echo.Echo, ah appointments.AppointmentHandlerInterface,
 	e.GET("/appointments/:id", ah.GetAppointment(), echojwt.JWT([]byte(cfg.Secret)))
 	e.PUT("/appointments/:id", ah.UpdateAppointment(), echojwt.JWT([]byte(cfg.Secret)))
 	e.DELETE("/appointments/:id", ah.DeleteAppointment(), echojwt.JWT([]byte(cfg.Secret)))
+}
+
+func RouteMedicalCheckup(e *echo.Echo, mch medicalcheckups.MedicalCheckupHandlerInterface, cfg configs.ProgramConfig) {
+	e.GET("/medicalcheckups", mch.GetMedicalCheckups(), echojwt.JWT([]byte(cfg.Secret)))
+	e.POST("/medicalcheckups", mch.CreateMedicalCheckup(), echojwt.JWT([]byte(cfg.Secret)))
+	e.GET("/medicalcheckups/:id", mch.GetMedicalCheckup(), echojwt.JWT([]byte(cfg.Secret)))
+	e.PUT("/medicalcheckups/:id", mch.UpdateMedicalCheckup(), echojwt.JWT([]byte(cfg.Secret)))
+	e.DELETE("/medicalcheckups/:id", mch.DeleteMedicalCheckup(), echojwt.JWT([]byte(cfg.Secret)))
+}
+
+func RouteMedicalCheckupDetail(e *echo.Echo, mcdh medicalcheckupdetails.MedicalCheckupDetailHandlerInterface, cfg configs.ProgramConfig) {
+	e.GET("/medicalcheckup/:idmcu/details", mcdh.GetMedicalCheckupDetails(), echojwt.JWT([]byte(cfg.Secret)))
+	e.POST("/medicalcheckup/:idmcu/details", mcdh.CreateMedicalCheckupDetail(), echojwt.JWT([]byte(cfg.Secret)))
+	e.GET("/medicalcheckup/:idmcu/details/:idmcudetail", mcdh.GetMedicalCheckupDetail(), echojwt.JWT([]byte(cfg.Secret)))
+	e.PUT("/medicalcheckup/:idmcu/details/:idmcudetail", mcdh.UpdateMedicalCheckupDetail(), echojwt.JWT([]byte(cfg.Secret)))
+	e.DELETE("/medicalcheckup/:idmcu/details/:idmcudetail", mcdh.DeleteMedicalCheckupDetail(), echojwt.JWT([]byte(cfg.Secret)))
 }

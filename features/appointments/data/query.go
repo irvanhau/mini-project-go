@@ -2,6 +2,7 @@ package data
 
 import (
 	"MiniProject/features/appointments"
+	"errors"
 
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -83,6 +84,10 @@ func (ad *AppointmentData) Update(newData appointments.UpdateAppointment, id int
 
 	if err := qry.Error; err != nil {
 		return false, err
+	}
+
+	if dataCount := qry.RowsAffected; dataCount < 1 {
+		return false, errors.New("Update Data Error, No Data Affected")
 	}
 
 	return true, nil
