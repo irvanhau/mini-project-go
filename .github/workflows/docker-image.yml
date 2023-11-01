@@ -8,10 +8,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Set Time Zone for a Command
-        run: |
-          TZ="Asia/Jakarta" 
-        shell: bash
       -
         name: Checkout
         uses: actions/checkout@v3
@@ -43,5 +39,5 @@ jobs:
           script: |
             docker stop ${{ secrets.CNAME }}
             docker rm ${{ secrets.CNAME }}
-            docker rmi -f ${{ secrets.DOCKERHUB_USERNAME }}/imgsimk
-                        docker run --name ${{ secrets.CNAME }} -p 8000:8000 -d -e DB_HOST=${{secrets.DB_HOST}} -e DB_PORT=3306 -e DB_USER=${{secrets.DB_USER}} -e DB_NAME=${{secrets.DB_NAME}} -e DB_PASS= -e JWT_SECRET=${{secrets.JWT_SECRET}} -e MT_SERVER_KEY=${{secrets.MT_SERVER_KEY}} -e MT_CLIENT_KEY=${{secrets.MT_CLIENT_KEY}} -e CLOUDINARY_CLOUD_NAME=${{secrets.CLOUDINARY_CLOUD_NAME}} -e CLOUDINARY_API_KEY=${{secrets.CLOUDINARY_API_KEY}} -e CLOUDINARY_API_SECRET=${{secrets.CLOUDINARY_API_SECRET}} -e CLOUDINARY_UPLOAD_FOLDER=${{secrets.CLOUDINARY_UPLOAD_FOLDER}} ${{secrets.DOCKERHUB_USERNAME }}/imgsimk
+            docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/imgsimk
+            docker run --name ${{ secrets.CNAME }} -p 8000:8000 -d -e DBHOST=${{secrets.DBHOST}} -e DBPORT=3306 -e DBUSER=${{secrets.DBUSER}} -e DBNAME=${{secrets.DBNAME}} -e DBPASS=${{secrets.DBPASS}} -e SECRET=${{secrets.JWTSECRET}} -e REFSECRET=${{secrets.REFSECRET}} -e SERVER=8000 ${{ secrets.DOCKERHUB_USERNAME }}/imgsimk
