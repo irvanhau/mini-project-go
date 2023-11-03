@@ -14,9 +14,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func RouteUser(e *echo.Echo, uh users.UserHandlerInterface) {
+func RouteUser(e *echo.Echo, uh users.UserHandlerInterface, cfg configs.ProgramConfig) {
 	e.POST("/register", uh.Register())
 	e.POST("/login", uh.Login())
+	e.GET("/users", uh.GetUser(), echojwt.JWT([]byte(cfg.Secret)))
 }
 
 func RouteMedicineCategory(e *echo.Echo, mch medicinecategories.MedicineCategoryHandlerInterface, cfg configs.ProgramConfig) {

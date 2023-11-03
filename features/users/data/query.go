@@ -67,13 +67,34 @@ func (ud *UserData) Login(email, password string) (*users.User, error) {
 	}
 
 	var result = new(users.User)
-	result.ID = dbData.ID
 	result.Email = dbData.Email
 	result.FullName = dbData.FullName
 	result.IdentityNumber = dbData.IdentityNumber
 	result.BOD = dbData.BOD
 	result.Address = dbData.Address
+	result.ID = dbData.ID
 	result.Role = dbData.Role
 
 	return result, nil
+}
+
+func (ud *UserData) GetUsers() ([]users.UserInfo, error) {
+	var listUser = []users.UserInfo{}
+
+	if err := ud.db.Table("users").Scan(&listUser).Error; err != nil {
+		logrus.Info("DB Error : ", err.Error())
+		return listUser, err
+	}
+
+	return listUser, nil
+}
+func (ud *UserData) GetUser(idUser int) (users.User, error) {
+	var listUser users.User
+
+	if err := ud.db.Where("id = ?", idUser).Find(&listUser).Error; err != nil {
+		logrus.Info("DB Error : ", err.Error())
+		return listUser, err
+	}
+
+	return listUser, nil
 }

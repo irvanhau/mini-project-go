@@ -3,6 +3,7 @@ package handler
 import (
 	"MiniProject/features/users"
 	"MiniProject/helper"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -10,12 +11,14 @@ import (
 )
 
 type UserHandler struct {
-	s users.UserServiceInterface
+	s   users.UserServiceInterface
+	jwt helper.JWTInterface
 }
 
-func NewHandler(service users.UserServiceInterface) users.UserHandlerInterface {
+func NewHandler(service users.UserServiceInterface, j helper.JWTInterface) users.UserHandlerInterface {
 	return &UserHandler{
-		s: service,
+		s:   service,
+		jwt: j,
 	}
 }
 
@@ -86,5 +89,39 @@ func (uh *UserHandler) Login() echo.HandlerFunc {
 		response.Token = result.Access
 
 		return c.JSON(http.StatusOK, helper.FormatResponse("Success Login", response))
+	}
+}
+
+func (uh *UserHandler) GetUser() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		role := uh.jwt.CheckRole(c)
+		fmt.Println(role)
+		if role == "Patient" {
+			userId := uh.jwt.GetID(c)
+			userIdInt := int(userId.(float64))
+
+			res, err := uh.s.GetUser(userIdInt)
+
+			if err != nil {
+				return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot Process Data", nil))
+			}
+
+			response := new(UserResponse)
+			response.Email = res.Email
+			response.FullName = res.FullName
+			response.Address = res.Address
+			response.BOD = res.BOD
+			response.IdentityNumber = res.IdentityNumber
+
+			return c.JSON(http.StatusOK, helper.FormatResponse("Success get users", response))
+		}
+
+		res, err := uh.s.GetUsers()
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot Process Data", nil))
+		}
+
+		return c.JSON(http.StatusOK, helper.FormatResponse("Success get users", res))
 	}
 }

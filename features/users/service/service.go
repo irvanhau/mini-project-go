@@ -63,3 +63,22 @@ func (us *UserService) Login(email, password string) (*users.UserCredential, err
 
 	return response, nil
 }
+
+func (us *UserService) GetUsers() ([]users.UserInfo, error) {
+	result, err := us.d.GetUsers()
+
+	if err != nil {
+		return result, errors.New("Get Users Failed")
+	}
+
+	return result, nil
+}
+func (us *UserService) GetUser(idUser int) (users.User, error) {
+	result, err := us.d.GetUser(idUser)
+
+	if err != nil {
+		return result, errors.New("Get User Failed")
+	}
+
+	return result, nil
+}

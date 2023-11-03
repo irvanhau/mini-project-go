@@ -54,7 +54,7 @@ func main() {
 
 	userModel := dataUser.New(db)
 	userServices := serviceUser.New(userModel, jwtInterface)
-	userHandler := handlerUser.NewHandler(userServices)
+	userHandler := handlerUser.NewHandler(userServices, jwtInterface)
 
 	medicineCategoryModel := dataMedicineCategories.New(db)
 	medicineCategoryServices := serviceMedicineCategories.New(medicineCategoryModel)
@@ -88,7 +88,7 @@ func main() {
 			Format: "method=${method}, uri=${uri}, status=${status}, time=${time_rfc3339}\n",
 		}))
 
-	routes.RouteUser(e, userHandler)
+	routes.RouteUser(e, userHandler, *config)
 	routes.RouteMedicineCategory(e, medicineCategoryHandler, *config)
 	routes.RouteMedicine(e, medicineHandler, *config)
 	routes.RouteAppointment(e, appointmentHandler, *config)
