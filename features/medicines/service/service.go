@@ -25,6 +25,7 @@ func (md *MedicineService) GetMedicines(kategori int, name string) ([]medicines.
 
 	return result, nil
 }
+
 func (md *MedicineService) GetMedicine(id int) ([]medicines.MedicineInfo, error) {
 	result, err := md.data.GetByID(id)
 
@@ -34,6 +35,7 @@ func (md *MedicineService) GetMedicine(id int) ([]medicines.MedicineInfo, error)
 
 	return result, nil
 }
+
 func (md *MedicineService) CreateMedicine(newData medicines.Medicine) (*medicines.Medicine, error) {
 	result, err := md.data.Insert(newData)
 
@@ -43,6 +45,7 @@ func (md *MedicineService) CreateMedicine(newData medicines.Medicine) (*medicine
 
 	return result, nil
 }
+
 func (md *MedicineService) UpdateMedicine(newData medicines.UpdateMedicine, id int) (bool, error) {
 	result, err := md.data.Update(newData, id)
 
@@ -52,6 +55,7 @@ func (md *MedicineService) UpdateMedicine(newData medicines.UpdateMedicine, id i
 
 	return result, nil
 }
+
 func (md *MedicineService) DeleteMedicine(id int) (bool, error) {
 	result, err := md.data.Delete(id)
 
@@ -66,7 +70,7 @@ func (md *MedicineService) FileUpload(file medicines.MedicineFile) (string, erro
 	uploadUrl, err := cloudinary.FileUploadHelper(file.File)
 
 	if err != nil {
-		return "", err
+		return "", errors.New("Upload File Failed")
 	}
 
 	return uploadUrl, nil
@@ -76,7 +80,7 @@ func (md *MedicineService) PhotoUpload(file medicines.MedicinePhoto) (string, er
 	uploadUrl, err := cloudinary.ImageUploadHelper(file.Photo)
 
 	if err != nil {
-		return "", err
+		return "", errors.New("Upload Photo Failed")
 	}
 
 	return uploadUrl, nil

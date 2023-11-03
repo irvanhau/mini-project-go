@@ -77,7 +77,7 @@ func (us *UserService) GetUser(idUser int) (users.User, error) {
 	result, err := us.d.GetUser(idUser)
 
 	if err != nil {
-		return result, errors.New("Get User Failed")
+		return result, errors.New("Get User By ID JWT Failed")
 	}
 
 	return result, nil

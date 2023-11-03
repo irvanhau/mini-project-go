@@ -18,11 +18,6 @@ func New(d transactions.TransactionDataInterface, mid midtrans.MidtransService) 
 	}
 }
 
-// ConfirmedTransaction implements transactions.TransactionServiceInterface.
-// func (t *transactionService) ConfirmedTransaction(id string) error {
-// 	panic("unimplemented")
-// }
-
 func (t *transactionService) CreateTransaction(idUser, idMcu int) (*transactions.Transaction, error) {
 	result, err := t.data.Insert(idUser, idMcu)
 
@@ -45,6 +40,9 @@ func (t *transactionService) PaymentTransaction(idTrans, idUser int) ([]transact
 	}
 
 	resUpdTrans, err := t.data.UpdateSnapURL(snapURL, idTrans)
+	if err != nil {
+		return nil, errors.New("Update Snap URL Failed")
+	}
 
 	return resUpdTrans, nil
 }
