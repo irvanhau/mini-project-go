@@ -122,5 +122,9 @@ func (ad *AppointmentData) Pagination() (int, int) {
 
 	totalPage := countInt / 3
 
+	if totalPage == 0 {
+		totalPage = 1
+	}
+
 	return countInt, totalPage
 }

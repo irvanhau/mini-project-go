@@ -10,52 +10,68 @@ import (
 )
 
 type MedicalCheckupHandler struct {
-	s medicalcheckups.MedicalCheckupServiceInterface
+	s   medicalcheckups.MedicalCheckupServiceInterface
+	jwt helper.JWTInterface
 }
 
-func NewHandler(service medicalcheckups.MedicalCheckupServiceInterface) medicalcheckups.MedicalCheckupHandlerInterface {
+func NewHandler(service medicalcheckups.MedicalCheckupServiceInterface, jwt helper.JWTInterface) medicalcheckups.MedicalCheckupHandlerInterface {
 	return &MedicalCheckupHandler{
-		s: service,
+		s:   service,
+		jwt: jwt,
 	}
 }
 
 func (mch *MedicalCheckupHandler) GetMedicalCheckups() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		role := mch.jwt.CheckRole(c)
+
+		if role != "Admin" {
+			return c.JSON(http.StatusUnauthorized, helper.FormatResponse("Only admin can access this page", nil))
+		}
+
 		result, err := mch.s.GetMedicalCheckups()
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Get All Process Error : ", err.Error())
-			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot process data", nil))
 		}
 
-		return c.JSON(http.StatusOK, helper.FormatResponse("Success", result))
+		return c.JSON(http.StatusOK, helper.FormatResponse("Success get medical checkup", result))
 	}
 }
 func (mch *MedicalCheckupHandler) GetMedicalCheckup() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		role := mch.jwt.CheckRole(c)
+
+		if role != "Admin" {
+			return c.JSON(http.StatusUnauthorized, helper.FormatResponse("Only admin can access this page", nil))
+		}
+
 		var paramID = c.Param("id")
 		id, err := strconv.Atoi(paramID)
 		if err != nil {
-			c.Logger().Fatal("Handler : Param ID Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid param id medical checkup", nil))
 		}
 
 		result, err := mch.s.GetMedicalCheckup(id)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Get By ID Process Error : ", err.Error())
-			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot process data", nil))
 		}
 
-		return c.JSON(http.StatusOK, helper.FormatResponse("Success", result))
+		return c.JSON(http.StatusOK, helper.FormatResponse("Success get medical checkup", result))
 	}
 }
 func (mch *MedicalCheckupHandler) CreateMedicalCheckup() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		role := mch.jwt.CheckRole(c)
+
+		if role != "Admin" {
+			return c.JSON(http.StatusUnauthorized, helper.FormatResponse("Only admin can access this page", nil))
+		}
+
 		var input = new(InputRequest)
 		if err := c.Bind(&input); err != nil {
-			c.Logger().Fatal("Handler : Bind Input Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid user input", nil))
 		}
 
 		var serviceInput = new(medicalcheckups.MedicalCheckup)
@@ -66,8 +82,7 @@ func (mch *MedicalCheckupHandler) CreateMedicalCheckup() echo.HandlerFunc {
 		result, err := mch.s.CreateMedicalCheckup(*serviceInput)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Input Process Error : ", err.Error())
-			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot process data", nil))
 		}
 
 		var response = new(InputResponse)
@@ -75,22 +90,26 @@ func (mch *MedicalCheckupHandler) CreateMedicalCheckup() echo.HandlerFunc {
 		response.Complain = result.Complain
 		response.Treatment = result.Treatment
 
-		return c.JSON(http.StatusCreated, helper.FormatResponse("Success", response))
+		return c.JSON(http.StatusCreated, helper.FormatResponse("Success created medical checkup", response))
 	}
 }
 func (mch *MedicalCheckupHandler) UpdateMedicalCheckup() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		role := mch.jwt.CheckRole(c)
+
+		if role != "Admin" {
+			return c.JSON(http.StatusUnauthorized, helper.FormatResponse("Only admin can access this page", nil))
+		}
+
 		var paramID = c.Param("id")
 		id, err := strconv.Atoi(paramID)
 		if err != nil {
-			c.Logger().Fatal("Handler : Param ID Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid param id medical checkup", nil))
 		}
 
 		var input = new(UpdateRequest)
 		if err := c.Bind(&input); err != nil {
-			c.Logger().Fatal("Handler : Bind Input Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid user input", nil))
 		}
 
 		var updateInput = new(medicalcheckups.UpdateMedicalCheckup)
@@ -99,28 +118,31 @@ func (mch *MedicalCheckupHandler) UpdateMedicalCheckup() echo.HandlerFunc {
 
 		result, err := mch.s.UpdateMedicalCheckup(*updateInput, id)
 		if err != nil {
-			c.Logger().Fatal("Handler : Update Process Error : ", err.Error())
-			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot process data", nil))
 		}
 
-		return c.JSON(http.StatusOK, helper.FormatResponse("Success", result))
+		return c.JSON(http.StatusOK, helper.FormatResponse("Success update medical checkup", result))
 	}
 }
 func (mch *MedicalCheckupHandler) DeleteMedicalCheckup() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		role := mch.jwt.CheckRole(c)
+
+		if role != "Admin" {
+			return c.JSON(http.StatusUnauthorized, helper.FormatResponse("Only admin can access this page", nil))
+		}
+
 		var paramID = c.Param("id")
 		id, err := strconv.Atoi(paramID)
 		if err != nil {
-			c.Logger().Fatal("Handler : Param ID Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid param id medical checkup", nil))
 		}
 
 		result, err := mch.s.DeleteMedicalCheckup(id)
 		if err != nil {
-			c.Logger().Fatal("Handler : Delete Process Error : ", err.Error())
-			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot process data", nil))
 		}
 
-		return c.JSON(http.StatusNoContent, helper.FormatResponse("Success", result))
+		return c.JSON(http.StatusNoContent, helper.FormatResponse("Success delete medical checkup", result))
 	}
 }

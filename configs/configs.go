@@ -9,14 +9,16 @@ import (
 )
 
 type ProgramConfig struct {
-	ServerPort int
-	DBPort     int
-	DBHost     string
-	DBUser     string
-	DBPass     string
-	DBName     string
-	Secret     string
-	RefSecret  string
+	ServerPort  int
+	DBPort      int
+	DBHost      string
+	DBUser      string
+	DBPass      string
+	DBName      string
+	Secret      string
+	RefSecret   string
+	MTServerKey string
+	MTClientKey string
 }
 
 func InitConfig() *ProgramConfig {
@@ -81,6 +83,13 @@ func loadConfig() *ProgramConfig {
 
 	if val, found := os.LookupEnv("REFSECRET"); found {
 		res.RefSecret = val
+	}
+
+	if val, found := os.LookupEnv("MT_SERVER_KEY"); found {
+		res.MTServerKey = val
+	}
+	if val, found := os.LookupEnv("MT_CLIENT_KEY"); found {
+		res.MTClientKey = val
 	}
 
 	return res

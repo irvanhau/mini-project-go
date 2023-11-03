@@ -22,20 +22,22 @@ func NewHandler(service appointments.AppointmentServiceInterface) appointments.A
 func (ah *AppointmentHandler) GetAppointments() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		paramPage := c.QueryParam("page")
-		page, _ := strconv.Atoi(paramPage)
+		page, err := strconv.Atoi(paramPage)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid user input", nil))
+		}
 
 		result, totalData, totalPage, err := ah.s.GetAppointments(page)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Get All Process Error : ", err.Error())
-			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot process data", nil))
 		}
 
 		if page != 0 {
-			return c.JSON(http.StatusOK, helper.FormatPagination("Success", result, page, totalPage, totalData))
+			return c.JSON(http.StatusOK, helper.FormatPagination("Success get appointment", result, page, totalPage, totalData))
 		}
 
-		return c.JSON(http.StatusOK, helper.FormatResponse("Success", result))
+		return c.JSON(http.StatusOK, helper.FormatResponse("Success get appointment", result))
 
 	}
 }
@@ -46,18 +48,16 @@ func (ah *AppointmentHandler) GetAppointment() echo.HandlerFunc {
 		id, err := strconv.Atoi(paramID)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Param ID Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid user input", nil))
 		}
 
 		result, err := ah.s.GetAppointment(id)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Get By ID Process Error : ", err.Error())
-			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot process data", nil))
 		}
 
-		return c.JSON(http.StatusOK, helper.FormatResponse("Success", result))
+		return c.JSON(http.StatusOK, helper.FormatResponse("Success get appointment", result))
 	}
 }
 
@@ -65,8 +65,7 @@ func (ah *AppointmentHandler) CreateAppointment() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var input = new(InputRequest)
 		if err := c.Bind(&input); err != nil {
-			c.Logger().Fatal("Handler : Bind Input Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid user input", nil))
 		}
 
 		var serviceInput = new(appointments.Appointment)
@@ -77,8 +76,7 @@ func (ah *AppointmentHandler) CreateAppointment() echo.HandlerFunc {
 		result, err := ah.s.CreateAppointment(*serviceInput)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Input Process Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Cannot process data", nil))
 		}
 
 		var response = new(InputResponse)
@@ -86,7 +84,7 @@ func (ah *AppointmentHandler) CreateAppointment() echo.HandlerFunc {
 		response.AppointmentDate = result.AppointmentDate
 		response.AppointmentTime = result.AppointmentTime
 
-		return c.JSON(http.StatusCreated, helper.FormatResponse("Success", response))
+		return c.JSON(http.StatusCreated, helper.FormatResponse("Success created appointment", response))
 	}
 
 }
@@ -96,14 +94,12 @@ func (ah *AppointmentHandler) UpdateAppointment() echo.HandlerFunc {
 		id, err := strconv.Atoi(paramID)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Param ID Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid user input", nil))
 		}
 
 		var input = new(UpdateRequest)
 		if err := c.Bind(&input); err != nil {
-			c.Logger().Fatal("Handler : Bind Input Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid user input", nil))
 		}
 
 		var serviceInput = new(appointments.UpdateAppointment)
@@ -113,11 +109,10 @@ func (ah *AppointmentHandler) UpdateAppointment() echo.HandlerFunc {
 		result, err := ah.s.UpdateAppointment(*serviceInput, id)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Update Process Error : ", err.Error())
-			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot process data", nil))
 		}
 
-		return c.JSON(http.StatusOK, helper.FormatResponse("Success", result))
+		return c.JSON(http.StatusOK, helper.FormatResponse("Success update appointment", result))
 	}
 }
 func (ah *AppointmentHandler) DeleteAppointment() echo.HandlerFunc {
@@ -126,17 +121,15 @@ func (ah *AppointmentHandler) DeleteAppointment() echo.HandlerFunc {
 		id, err := strconv.Atoi(paramID)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Param ID Error : ", err.Error())
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Invalid user input", nil))
 		}
 
 		result, err := ah.s.DeleteAppointment(id)
 
 		if err != nil {
-			c.Logger().Fatal("Handler : Delete Process Error : ", err.Error())
-			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Fail", nil))
+			return c.JSON(http.StatusInternalServerError, helper.FormatResponse("Cannot process data", nil))
 		}
 
-		return c.JSON(http.StatusNoContent, helper.FormatResponse("Success", result))
+		return c.JSON(http.StatusNoContent, helper.FormatResponse("Success delete appointment", result))
 	}
 }

@@ -23,6 +23,12 @@ func (us *UserService) Register(newData users.User) (*users.User, error) {
 	result, err := us.d.Register(newData)
 
 	if err != nil {
+		if strings.Contains(err.Error(), "Email") {
+			return nil, errors.New("Email has already registered")
+		}
+		if strings.Contains(err.Error(), "Identity Number") {
+			return nil, errors.New("Identity Number has already registered")
+		}
 		return nil, errors.New("Register Process Failed")
 	}
 

@@ -18,26 +18,39 @@ func New(db *gorm.DB) medicalcheckupdetails.MedicalCheckupDetailDataInterface {
 	}
 }
 
-func (mcdd *MedicalCheckupDetailData) GetAll(idMcu int) ([]medicalcheckupdetails.MedicalCheckupDetailInfo, error) {
-	var listMCUD = []medicalcheckupdetails.MedicalCheckupDetailInfo{}
+func (mcdd *MedicalCheckupDetailData) GetAll(idMcu int) (medicalcheckupdetails.MedicalCheckupDetailInfo, medicalcheckupdetails.DetailInfo, error) {
+	var listMCUD medicalcheckupdetails.MedicalCheckupDetailInfo
+	var listMedicine medicalcheckupdetails.DetailInfo
 	var qry = mcdd.db.Table("medical_checkup_details as mcd").
-		Select("mcd.id as id", "mc.complain as complain", "mc.treatment as treatment", "mcd.quantity as quantity", "m.name as medicine_name").
+		Select("mcd.medical_checkup_id as medical_checkup_id", "mc.complain as complain", "mc.treatment as treatment", "mcd.quantity as quantity", "m.name as medicine_name").
 		Joins("JOIN medical_checkups as mc ON mc.id = mcd.medical_checkup_id").
 		Joins("JOIN medicines as m ON m.id = mcd.medicine_id").
 		Where("mcd.medical_checkup_id = ?", idMcu).
 		Where("mcd.deleted_at is null")
 
+	var qryMedicine = mcdd.db.Table("medical_checkup_details as mcd").
+		Select("mcd.quantity as quantity", "m.name as medicine_name").
+		Joins("JOIN medicines as m ON m.id = mcd.medicine_id").
+		Where("mcd.medical_checkup_id = ?", idMcu).
+		Where("mcd.deleted_at is null").
+		Scan(&listMedicine)
+
 	if err := qry.Scan(&listMCUD).Error; err != nil {
 		log.Fatal("DB Error : ", err.Error())
-		return nil, err
+		return listMCUD, listMedicine, err
 	}
 
-	return listMCUD, nil
+	if err := qryMedicine.Error; err != nil {
+		log.Fatal("DB Error : ", err.Error())
+		return listMCUD, listMedicine, err
+	}
+
+	return listMCUD, listMedicine, nil
 }
 func (mcdd *MedicalCheckupDetailData) GetByID(idMcu, idMcuDetail int) ([]medicalcheckupdetails.MedicalCheckupDetailInfo, error) {
 	var listMCUD = []medicalcheckupdetails.MedicalCheckupDetailInfo{}
 	var qry = mcdd.db.Table("medical_checkup_details as mcd").
-		Select("mcd.id as id", "mc.complain as complain", "mc.treatment as treatment", "mcd.quantity as quantity", "m.name as medicine_name").
+		Select("mc.id as medical_checkup_id", "mc.complain as complain", "mc.treatment as treatment", "mcd.quantity as quantity", "m.name as medicine_name").
 		Joins("JOIN medical_checkups as mc ON mc.id = mcd.medical_checkup_id").
 		Joins("JOIN medicines as m ON m.id = mcd.medicine_id").
 		Where("mcd.medical_checkup_id = ?", idMcu).

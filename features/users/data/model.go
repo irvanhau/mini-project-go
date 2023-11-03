@@ -3,6 +3,7 @@ package data
 import (
 	dataAppointment "MiniProject/features/appointments/data"
 	dataMCU "MiniProject/features/medical_checkups/data"
+	"MiniProject/features/transactions"
 
 	"gorm.io/gorm"
 )
@@ -18,4 +19,5 @@ type User struct {
 	Role           string                        `gorm:"column:role;type:enum('Admin','Patient')"`
 	Appointments   []dataAppointment.Appointment `gorm:"foreignKey:UserID"`
 	MedicalCheckup []dataMCU.MedicalCheckup      `gorm:"foreignKey:UserID"`
+	Transactions   []transactions.Transaction    `gorm:"foreignKey:UserID"`
 }

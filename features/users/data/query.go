@@ -4,6 +4,7 @@ import (
 	"MiniProject/features/users"
 	"MiniProject/helper"
 	"errors"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
@@ -36,6 +37,12 @@ func (ud *UserData) Register(newData users.User) (*users.User, error) {
 	dbData.Password = hashPassword
 
 	if err := ud.db.Create(dbData).Error; err != nil {
+		if strings.Contains(err.Error(), "email") {
+			return nil, errors.New("Email has already registered")
+		}
+		if strings.Contains(err.Error(), "identity_number") {
+			return nil, errors.New("Identity Number has already registered")
+		}
 		return nil, err
 	}
 

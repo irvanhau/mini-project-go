@@ -7,6 +7,7 @@ import (
 	medicalcheckups "MiniProject/features/medical_checkups"
 	medicinecategories "MiniProject/features/medicine_categories"
 	"MiniProject/features/medicines"
+	"MiniProject/features/transactions"
 	"MiniProject/features/users"
 
 	echojwt "github.com/labstack/echo-jwt"
@@ -59,4 +60,12 @@ func RouteMedicalCheckupDetail(e *echo.Echo, mcdh medicalcheckupdetails.MedicalC
 	e.GET("/medicalcheckup/:idmcu/details/:idmcudetail", mcdh.GetMedicalCheckupDetail(), echojwt.JWT([]byte(cfg.Secret)))
 	e.PUT("/medicalcheckup/:idmcu/details/:idmcudetail", mcdh.UpdateMedicalCheckupDetail(), echojwt.JWT([]byte(cfg.Secret)))
 	e.DELETE("/medicalcheckup/:idmcu/details/:idmcudetail", mcdh.DeleteMedicalCheckupDetail(), echojwt.JWT([]byte(cfg.Secret)))
+}
+
+func RouteTransaction(e *echo.Echo, th transactions.TransactionHandlerInterface, cfg configs.ProgramConfig) {
+	e.POST("/medicalcheckup/:idmcu/transactions/:iduser", th.CreateTransaction(), echojwt.JWT([]byte(cfg.Secret)))
+	e.POST("/medicalcheckup/:iduser/payments/:idtrans", th.PaymentTransaction(), echojwt.JWT([]byte(cfg.Secret)))
+	e.GET("/medicalcheckup/:iduser/notifications/:idtrans", th.NotificationPayment(), echojwt.JWT([]byte(cfg.Secret)))
+
+	e.GET("/transactions", th.GetTransactions(), echojwt.JWT([]byte(cfg.Secret)))
 }

@@ -10,14 +10,14 @@ type MedicalCheckupDetail struct {
 }
 
 type MedicalCheckupDetailInfo struct {
-	ID           uint   `json:"id"`
-	Complain     string `json:"complain"`
-	Treatment    string `json:"treatment"`
-	MedicineName string `json:"medicine_name"`
-	Quantity     int    `json:"quantity"`
+	MedicalCheckupID uint   `json:"medical_checkup_id"`
+	Complain         string `json:"complain"`
+	Treatment        string `json:"treatment"`
+	MedicineName     string `json:"medicine_name"`
+	Quantity         int    `json:"quantity"`
 }
 
-type DetailInfo struct {
+type DetailInfo []struct {
 	MedicineName string `json:"medicine_name"`
 	Quantity     int    `json:"quantity"`
 }
@@ -36,7 +36,7 @@ type MedicalCheckupDetailHandlerInterface interface {
 }
 
 type MedicalCheckupDetailServiceInterface interface {
-	GetMedicalCheckupDetails(idMcu int) ([]MedicalCheckupDetailInfo, error)
+	GetMedicalCheckupDetails(idMcu int) (MedicalCheckupDetailInfo, DetailInfo, error)
 	GetMedicalCheckupDetail(idMcu, idMcuDetail int) ([]MedicalCheckupDetailInfo, error)
 	CreateMedicalCheckupDetail(newData MedicalCheckupDetail) (*MedicalCheckupDetail, error)
 	UpdateMedicalCheckupDetail(newData UpdateMedicalCheckupDetail, idMcu, idMcuDetail int) (bool, error)
@@ -44,7 +44,7 @@ type MedicalCheckupDetailServiceInterface interface {
 }
 
 type MedicalCheckupDetailDataInterface interface {
-	GetAll(idMcu int) ([]MedicalCheckupDetailInfo, error)
+	GetAll(idMcu int) (MedicalCheckupDetailInfo, DetailInfo, error)
 	GetByID(idMcu, idMcuDetail int) ([]MedicalCheckupDetailInfo, error)
 	Insert(newData MedicalCheckupDetail) (*MedicalCheckupDetail, error)
 	Update(newData UpdateMedicalCheckupDetail, idMcu, idMcuDetail int) (bool, error)

@@ -15,14 +15,14 @@ func New(data medicalcheckupdetails.MedicalCheckupDetailDataInterface) medicalch
 	}
 }
 
-func (mcds *MedicalCheckupDetailService) GetMedicalCheckupDetails(idMcu int) ([]medicalcheckupdetails.MedicalCheckupDetailInfo, error) {
-	result, err := mcds.d.GetAll(idMcu)
+func (mcds *MedicalCheckupDetailService) GetMedicalCheckupDetails(idMcu int) (medicalcheckupdetails.MedicalCheckupDetailInfo, medicalcheckupdetails.DetailInfo, error) {
+	result, resMed, err := mcds.d.GetAll(idMcu)
 
 	if err != nil {
-		return nil, errors.New("Get All Process Failed")
+		return result, resMed, errors.New("Get All Process Failed")
 	}
 
-	return result, nil
+	return result, resMed, nil
 }
 func (mcds *MedicalCheckupDetailService) GetMedicalCheckupDetail(idMcu, idMcuDetail int) ([]medicalcheckupdetails.MedicalCheckupDetailInfo, error) {
 	result, err := mcds.d.GetByID(idMcu, idMcuDetail)

@@ -3,11 +3,13 @@ module MiniProject
 go 1.21.0
 
 require (
+	github.com/cloudinary/cloudinary-go/v2 v2.5.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo-jwt v0.0.0-20221127215225-c84d41a71003
 	github.com/labstack/echo/v4 v4.11.2
 	github.com/labstack/gommon v0.4.0
+	github.com/midtrans/midtrans-go v1.3.7
 	github.com/sirupsen/logrus v1.9.3
 	golang.org/x/crypto v0.14.0
 	gorm.io/driver/mysql v1.5.2
@@ -15,7 +17,6 @@ require (
 )
 
 require (
-	github.com/cloudinary/cloudinary-go/v2 v2.5.1 // indirect
 	github.com/creasty/defaults v1.5.1 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
