@@ -3,10 +3,9 @@ package data
 import (
 	"MiniProject/features/transactions"
 	"errors"
-	"fmt"
 	"log"
-	"strconv"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -32,7 +31,7 @@ func (t *transactionData) Insert(idUser, idMcu int) (*transactions.Transaction, 
 	}
 
 	var total int
-	var TransactionID = fmt.Sprintf("TRANS-%d", 0001)
+	TransactionID := uuid.NewString()
 
 	var _ = t.db.Table("medical_checkup_details as mcd").
 		Select("mcd.quantity as quantity", "m.price as medicine_price").
@@ -53,11 +52,11 @@ func (t *transactionData) Insert(idUser, idMcu int) (*transactions.Transaction, 
 		total += price
 	}
 
-	for _, transID := range TransactionIDInfo {
-		TransactionNumber := transID.TransactionID[6:7]
-		number, _ := strconv.Atoi(TransactionNumber)
-		TransactionID = fmt.Sprintf("TRANS-%d", number+1)
-	}
+	// for _, transID := range TransactionIDInfo {
+	// 	TransactionNumber := transID.TransactionID[6:7]
+	// 	number, _ := strconv.Atoi(TransactionNumber)
+	// 	TransactionID = TransactionID
+	// }
 
 	var dbData = new(Transaction)
 	dbData.TransactionID = TransactionID
