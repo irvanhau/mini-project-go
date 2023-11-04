@@ -3,6 +3,7 @@ package service
 import (
 	"MiniProject/features/medicines"
 	"MiniProject/features/medicines/mocks"
+	utils "MiniProject/utils/mocks"
 	"errors"
 	"testing"
 
@@ -11,7 +12,8 @@ import (
 
 func TestGetMedicines(t *testing.T) {
 	data := mocks.NewMedicineDataInterface(t)
-	service := New(data)
+	cl := utils.NewCloudinaryInterface(t)
+	service := New(data, cl)
 	medicine := []medicines.MedicineInfo{}
 
 	t.Run("Success Get", func(t *testing.T) {
@@ -22,6 +24,7 @@ func TestGetMedicines(t *testing.T) {
 		assert.Nil(t, err)
 		assert.NotNil(t, result)
 		data.AssertExpectations(t)
+		cl.AssertExpectations(t)
 	})
 
 	t.Run("Server Error", func(t *testing.T) {
@@ -36,7 +39,8 @@ func TestGetMedicines(t *testing.T) {
 
 func TestGetMedicine(t *testing.T) {
 	data := mocks.NewMedicineDataInterface(t)
-	service := New(data)
+	cl := utils.NewCloudinaryInterface(t)
+	service := New(data, cl)
 	medicine := []medicines.MedicineInfo{}
 
 	t.Run("Success Get", func(t *testing.T) {
@@ -47,6 +51,7 @@ func TestGetMedicine(t *testing.T) {
 		assert.Nil(t, err)
 		assert.NotNil(t, result)
 		data.AssertExpectations(t)
+		cl.AssertExpectations(t)
 	})
 
 	t.Run("Server Error", func(t *testing.T) {
@@ -61,7 +66,8 @@ func TestGetMedicine(t *testing.T) {
 
 func TestCreateMedicine(t *testing.T) {
 	data := mocks.NewMedicineDataInterface(t)
-	service := New(data)
+	cl := utils.NewCloudinaryInterface(t)
+	service := New(data, cl)
 	medicine := medicines.Medicine{
 		CategoryID:   1,
 		Name:         "Panadol",
@@ -87,6 +93,7 @@ func TestCreateMedicine(t *testing.T) {
 		assert.Equal(t, medicine.Photo, result.Photo)
 		assert.Equal(t, medicine.File, result.File)
 		data.AssertExpectations(t)
+		cl.AssertExpectations(t)
 	})
 
 	t.Run("Server Error", func(t *testing.T) {
@@ -101,7 +108,8 @@ func TestCreateMedicine(t *testing.T) {
 
 func TestUpdateMedicine(t *testing.T) {
 	data := mocks.NewMedicineDataInterface(t)
-	service := New(data)
+	cl := utils.NewCloudinaryInterface(t)
+	service := New(data, cl)
 	medicine := medicines.UpdateMedicine{
 		CategoryID:   1,
 		Name:         "Panadol",
@@ -119,6 +127,7 @@ func TestUpdateMedicine(t *testing.T) {
 		assert.NotNil(t, result)
 		assert.Equal(t, true, result)
 		data.AssertExpectations(t)
+		cl.AssertExpectations(t)
 	})
 
 	t.Run("Server Error", func(t *testing.T) {
@@ -133,7 +142,8 @@ func TestUpdateMedicine(t *testing.T) {
 
 func TestDeleteMedicine(t *testing.T) {
 	data := mocks.NewMedicineDataInterface(t)
-	service := New(data)
+	cl := utils.NewCloudinaryInterface(t)
+	service := New(data, cl)
 
 	t.Run("Success Delete", func(t *testing.T) {
 		data.On("Delete", 1).Return(true, nil).Once()
@@ -144,6 +154,7 @@ func TestDeleteMedicine(t *testing.T) {
 		assert.NotNil(t, result)
 		assert.Equal(t, true, result)
 		data.AssertExpectations(t)
+		cl.AssertExpectations(t)
 	})
 
 	t.Run("Server Error", func(t *testing.T) {
@@ -158,7 +169,8 @@ func TestDeleteMedicine(t *testing.T) {
 
 func TestUpdateFileMedicine(t *testing.T) {
 	data := mocks.NewMedicineDataInterface(t)
-	service := New(data)
+	cl := utils.NewCloudinaryInterface(t)
+	service := New(data, cl)
 
 	t.Run("Success Update File", func(t *testing.T) {
 		data.On("UpdateFileMedicine", "", 1).Return(true, nil).Once()
@@ -168,6 +180,7 @@ func TestUpdateFileMedicine(t *testing.T) {
 		assert.Nil(t, err)
 		assert.NotNil(t, result)
 		data.AssertExpectations(t)
+		cl.AssertExpectations(t)
 	})
 
 	t.Run("Server Error", func(t *testing.T) {
@@ -183,7 +196,8 @@ func TestUpdateFileMedicine(t *testing.T) {
 
 func TestUpdatePhotoMedicine(t *testing.T) {
 	data := mocks.NewMedicineDataInterface(t)
-	service := New(data)
+	cl := utils.NewCloudinaryInterface(t)
+	service := New(data, cl)
 
 	t.Run("Success Update Photo", func(t *testing.T) {
 		data.On("UpdatePhotoMedicine", "", 1).Return(true, nil).Once()
@@ -193,6 +207,7 @@ func TestUpdatePhotoMedicine(t *testing.T) {
 		assert.Nil(t, err)
 		assert.NotNil(t, result)
 		data.AssertExpectations(t)
+		cl.AssertExpectations(t)
 	})
 
 	t.Run("Server Error", func(t *testing.T) {

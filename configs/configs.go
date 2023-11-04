@@ -4,21 +4,24 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 )
 
 type ProgramConfig struct {
-	ServerPort  int
-	DBPort      int
-	DBHost      string
-	DBUser      string
-	DBPass      string
-	DBName      string
-	Secret      string
-	RefSecret   string
-	MTServerKey string
-	MTClientKey string
+	ServerPort      int
+	DBPort          int
+	DBHost          string
+	DBUser          string
+	DBPass          string
+	DBName          string
+	Secret          string
+	RefSecret       string
+	MTServerKey     string
+	MTClientKey     string
+	CloudAPIKey     string
+	CloudAPISecret  string
+	CloudName       string
+	CloudFolderName string
 }
 
 func InitConfig() *ProgramConfig {
@@ -88,41 +91,26 @@ func loadConfig() *ProgramConfig {
 	if val, found := os.LookupEnv("MT_SERVER_KEY"); found {
 		res.MTServerKey = val
 	}
+
 	if val, found := os.LookupEnv("MT_CLIENT_KEY"); found {
 		res.MTClientKey = val
 	}
 
+	if val, found := os.LookupEnv("CLOUDINARY_CLOUD_NAME"); found {
+		res.CloudName = val
+	}
+
+	if val, found := os.LookupEnv("CLOUDINARY_API_KEY"); found {
+		res.CloudAPIKey = val
+	}
+
+	if val, found := os.LookupEnv("CLOUDINARY_API_SECRET"); found {
+		res.CloudAPISecret = val
+	}
+
+	if val, found := os.LookupEnv("CLOUDINARY_UPLOAD_FOLDER"); found {
+		res.CloudFolderName = val
+	}
+
 	return res
-}
-
-func EnvCloudName() string {
-	err := godotenv.Load()
-	if err != nil {
-		logrus.Fatal("Error loading .env file")
-	}
-	return os.Getenv("CLOUDINARY_CLOUD_NAME")
-}
-
-func EnvCloudAPIKey() string {
-	err := godotenv.Load()
-	if err != nil {
-		logrus.Fatal("Error loading .env file")
-	}
-	return os.Getenv("CLOUDINARY_API_KEY")
-}
-
-func EnvCloudAPISecret() string {
-	err := godotenv.Load()
-	if err != nil {
-		logrus.Fatal("Error loading .env file")
-	}
-	return os.Getenv("CLOUDINARY_API_SECRET")
-}
-
-func EnvCloudUploadFolder() string {
-	err := godotenv.Load()
-	if err != nil {
-		logrus.Fatal("Error loading .env file")
-	}
-	return os.Getenv("CLOUDINARY_UPLOAD_FOLDER")
 }

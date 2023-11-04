@@ -34,6 +34,7 @@ import (
 	serviceTransactions "MiniProject/features/transactions/service"
 
 	"MiniProject/helper"
+	"MiniProject/utils/cloudinary"
 	"MiniProject/utils/database"
 	"MiniProject/utils/midtrans"
 
@@ -49,6 +50,7 @@ func main() {
 	database.Migrate(db)
 
 	var mt = midtrans.NewMidtrans(*config, dataTransactions.New(db))
+	var cl = cloudinary.InitCloud(*config)
 
 	jwtInterface := helper.New(config.Secret, config.RefSecret)
 
@@ -61,7 +63,7 @@ func main() {
 	medicineCategoryHandler := handlerMedicineCategories.NewHandler(medicineCategoryServices, jwtInterface)
 
 	medicineModel := dataMedicines.New(db)
-	medicineServices := serviceMedicines.New(medicineModel)
+	medicineServices := serviceMedicines.New(medicineModel, cl)
 	medicineHandler := handlerMedicines.NewHandler(medicineServices, jwtInterface)
 
 	appointmentModel := dataAppointments.New(db)

@@ -8,11 +8,13 @@ import (
 
 type MedicineService struct {
 	data medicines.MedicineDataInterface
+	cl   cloudinary.CloudinaryInterface
 }
 
-func New(data medicines.MedicineDataInterface) medicines.MedicineServiceInterface {
+func New(data medicines.MedicineDataInterface, cloudinary cloudinary.CloudinaryInterface) medicines.MedicineServiceInterface {
 	return &MedicineService{
 		data: data,
+		cl:   cloudinary,
 	}
 }
 
@@ -67,7 +69,7 @@ func (md *MedicineService) DeleteMedicine(id int) (bool, error) {
 }
 
 func (md *MedicineService) FileUpload(file medicines.MedicineFile) (string, error) {
-	uploadUrl, err := cloudinary.FileUploadHelper(file.File)
+	uploadUrl, err := md.cl.FileUploadHelper(file.File)
 
 	if err != nil {
 		return "", errors.New("Upload File Failed")
@@ -77,7 +79,7 @@ func (md *MedicineService) FileUpload(file medicines.MedicineFile) (string, erro
 }
 
 func (md *MedicineService) PhotoUpload(file medicines.MedicinePhoto) (string, error) {
-	uploadUrl, err := cloudinary.ImageUploadHelper(file.Photo)
+	uploadUrl, err := md.cl.ImageUploadHelper(file.Photo)
 
 	if err != nil {
 		return "", errors.New("Upload Photo Failed")
