@@ -42,9 +42,6 @@ services:
       - domain
     ports:
       - "8000:8000"
-    depends_on:
-      database:
-        condition: service_healthy
 
 # Define networks
 networks:
