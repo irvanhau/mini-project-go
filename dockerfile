@@ -1,12 +1,11 @@
 FROM golang:1.21-alpine
 
-ENV GOSRC=${GOPATH}/src
+COPY . /app
 
-WORKDIR ${GOSRC}/miniproject
-
-COPY . .
+WORKDIR /app
 
 RUN go mod tidy
-RUN go install
 
-CMD [ "miniproject" ]
+RUN go build -o app .
+
+CMD ["/app/app"]
