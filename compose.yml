@@ -1,0 +1,51 @@
+# We're using version 3.7 of the Docker Compose file format
+version: "3.8"
+
+# Define services/containers
+services:
+  # MySQL container
+  mysql:
+    # Use mysql:8.0.19 image
+    image: mysql:8.0.19
+    # Connect to "my-network" network, as defined below
+    networks:
+      - domain
+    # Pass a list of environment variables to the container
+    environment:
+      MYSQL_ROOT_PASSWORD: katasandi
+    healthcheck:
+      test: ["CMD", "mysql", "-u", "root",  "-pkatasandi", "-e", "show schemas"]
+      interval: 10s
+
+  # phpMyAdmin container
+  phpmyadmin:
+    # Use phpmyadmin/phpmyadmin:5.0.2 image
+    image: phpmyadmin/phpmyadmin:5.0.2
+    # Connect to "my-network" network, as defined below
+    networks:
+      - domain
+    # Map port 8080 on the host to port 80 inside the container
+    # Syntax is: "HOST_PORT:CONTAINER_PORT"
+    ports:
+      - "8080:80"
+    # Pass a list of environment variables to the container
+    environment:
+      PMA_HOST: mysql
+    # Wait for "mysql" container to start first
+    depends_on:
+      - mysql
+      
+  app:
+    container_name: miniproject
+    image: irvanhau/imgsimk:latest
+    networks:
+      - domain
+    ports:
+      - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+
+# Define networks
+networks:
+  my-domain:
