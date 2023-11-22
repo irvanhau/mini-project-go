@@ -37,8 +37,8 @@ jobs:
           key: ${{secrets.KEY}}
           port: ${{secrets.PORT}}
           script: |
-            # sudo docker-compose down
-            # sudo docker-compose up -d
+            sudo docker-compose down
+            sudo docker-compose up -d
             sudo docker stop ${{secrets.CNAME}}
             sudo docker rm ${{secrets.CNAME}}
             sudo docker rmi ${{secrets.DOCKERHUB_USERNAME}}/imgsimk
