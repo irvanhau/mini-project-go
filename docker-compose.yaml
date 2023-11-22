@@ -8,7 +8,7 @@ services:
       - MYSQL_ROOT_PASSWORD=katasandi
       - MYSQL_DATABASE=miniproject
     networks:
-      - domain
+      - mydomain
     ports:
       - "3306:3306"
     healthcheck:
@@ -19,7 +19,7 @@ services:
     container_name: app
     image: irvanhau/imgsimk:latest
     networks:
-      - domain
+      - mydomain
     ports:
       - "8008:8008"
     depends_on:
@@ -27,4 +27,4 @@ services:
           condition: service_healthy
 
 networks:
-  domain:
+  mydomain:
