@@ -45,4 +45,4 @@ services:
 
 # Define networks
 networks:
-  my-domain:
+  domain:
