@@ -15,8 +15,8 @@ services:
       test: ["CMD", "mysql", "-u", "root",  "-pkatasandi", "-e", "show schemas"]
       interval: 10s
 
-  app:
-    container_name: app
+  miniproject:
+    container_name: miniproject
     image: irvanhau/imgsimk:latest
     networks:
       - mydomain
