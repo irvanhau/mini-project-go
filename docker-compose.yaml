@@ -36,7 +36,7 @@ services:
       - mysql
       
   app:
-    container_name: miniproject
+    container_name: miniprojectkmb
     image: irvanhau/imgsimk:latest
     networks:
       - domain
