@@ -1,11 +1,12 @@
-FROM golang:1.21-alpine
+FROM golang:1.21.3-alpine3.18
 
-COPY . /app
+ENV GOSRC=${GOPATH}/src
 
-WORKDIR /app
+WORKDIR ${GOSRC}/imgsimk
+
+COPY . .
 
 RUN go mod tidy
+RUN go install
 
-RUN go build -o app .
-
-CMD ["/app/app"]
+CMD [ "imgsimk" ]
