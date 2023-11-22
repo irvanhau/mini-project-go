@@ -13,6 +13,7 @@ services:
     # Pass a list of environment variables to the container
     environment:
       MYSQL_ROOT_PASSWORD: katasandi
+      MY_SQL_DATABASE: miniproject
     healthcheck:
       test: ["CMD", "mysql", "-u", "root",  "-pkatasandi", "-e", "show schemas"]
       interval: 10s
@@ -27,7 +28,7 @@ services:
     # Map port 8080 on the host to port 80 inside the container
     # Syntax is: "HOST_PORT:CONTAINER_PORT"
     ports:
-      - "8080:80"
+      - "8001:80"
     # Pass a list of environment variables to the container
     environment:
       PMA_HOST: mysql
@@ -36,7 +37,7 @@ services:
       - mysql
 
   app:
-    container_name: miniprojectkmb
+    container_name: miniproject
     image: irvanhau/imgsimk:latest
     networks:
       - domain
