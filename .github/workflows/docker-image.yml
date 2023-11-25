@@ -8,34 +8,34 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # -
-      #   name: Checkout
-      #   uses: actions/checkout@v3
-      # -
-      #   name: Login to Docker Hub
-      #   uses: docker/login-action@v2
-      #   with:
-      #     username: ${{secrets.DOCKERHUB_USERNAME}}
-      #     password: ${{secrets.DOCKERHUB_TOKEN}}
-      # -
-      #   name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v2
-      # -
-      #   name: Build and push
-      #   uses: docker/build-push-action@v4
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile
-      #     push: true
-      #     tags: ${{secrets.DOCKERHUB_USERNAME}}/imgsimk:latest 
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/imgsimk:latest 
       -
         name: connect ssh
         uses: appleboy/ssh-action@v0.1.9
         env:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASS: ${{ secrets.DB_PASS }}
-          # DBPORT: ${{ secrets.DB_PORT }}
-          # DBNAME: ${{ secrets.DB_NAME }}
+          DBPORT: ${{ secrets.DB_PORT }}
+          DBNAME: ${{ secrets.DB_NAME }}
         with:
           host: ${{secrets.HOST}}
           username: ${{secrets.USERNAME}}
@@ -45,15 +45,16 @@ jobs:
           script: |
             export DBUSER=$DB_USER
             export DBPASS=$DB_PASS
-            echo $DBUSER >> tulisan.txt
-            echo $DBPASS >> tulisan.txt
+            # echo $DBUSER >> tulisan.txt
+            # echo $DBPASS >> tulisan.txt
             
-            # export DBPORT=$DBPORT
-            # export DBNAME=$DBNAME
-            # cd multi-deployment-example
-            # git pull origin main
-            # docker compose down -v
-            # docker compose up -d
+            export DBPORT=$DBPORT
+            export DBNAME=$DBNAME
+            cd mini-project-go
+            git pull origin main
+            docker compose down -v
+            docker compose up -d
+            
             # sudo docker-compose down
             # sudo docker-compose up -d
             # sudo docker stop ${{secrets.CNAME}}
