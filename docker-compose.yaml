@@ -1,49 +1,87 @@
-# We're using version 3.7 of the Docker Compose file format
-version: "3.8"
-
-# Define services/containers
+version: '3'
+# secrets:
+#   mysql_user: 
+#     labels: 
+#   # ${DBUSER}
+#   # mysql_password: ${DBPASS}
+#   # mysql_host: ${DBHOST}
+#   # mysql_port: ${DBPORT}
+#   # mysql_name: ${DBNAME}
 services:
-  # MySQL container
-  mysql:
-    # Use mysql:8.0.19 image
-    image: mysql:8.0.19
-    # Connect to "my-network" network, as defined below
-    networks:
-      - domain
-    # Pass a list of environment variables to the container
+  db:
+    image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: katasandi
-      MY_SQL_DATABASE: miniproject
-    healthcheck:
-      test: ["CMD", "mysql", "-u", "root",  "-pkatasandi", "-e", "show schemas"]
-      interval: 10s
-
-  # phpMyAdmin container
-  phpmyadmin:
-    # Use phpmyadmin/phpmyadmin:5.0.2 image
-    image: phpmyadmin/phpmyadmin:5.0.2
-    # Connect to "my-network" network, as defined below
+      MYSQL_ROOT_PASSWORD: ${DBPASS}
+      MYSQL_DATABASE: ${DBNAME}
     networks:
-      - domain
-    # Map port 8080 on the host to port 80 inside the container
-    # Syntax is: "HOST_PORT:CONTAINER_PORT"
+      - mynet
     ports:
-      - "8001:80"
-    # Pass a list of environment variables to the container
-    environment:
-      PMA_HOST: mysql
-    # Wait for "mysql" container to start first
+      - '3306:3306'
+  # cache:
+  #   image: redis:7.2-alpine
+  #   environment:
+  #     REDIS_PASSWORD: rpassword
+  #   networks:
+  #     - mynet
+  #   ports:
+  #     - '6379:6379'
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "-a", "rpassword", "ping"]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 3
+  # mongo:
+  #   image: mongo
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: example
+  #   networks:
+  #     - mynet
+  #   ports:
+  #     - '27017:27017'
+  #   healthcheck:
+  #     test: [
+  #       "CMD",
+  #       "mongo",
+  #       "--quiet",
+  #       "127.0.0.1/test",
+  #       "--eval",
+  #       "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'",
+  #     ]
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 5
+  #     start_period: 60s
+  api:
+    image: irvanhau/imgsimk
     depends_on:
-      - mysql
-
-  app:
-    container_name: miniproject
-    image: irvanhau/imgsimk:latest
-    networks:
-      - domain
+      db:
+        condition: service_started
+        required: true
+      # cache:
+      #   condition: service_healthy
+      #   required: true
+      # mongo:
+      #   condition: service_started
+      #   required: true
+    environment:
+      - DBUSER=${DBUSER}
+      - DBPASS=${DBPASS}
+      - DBHOST=db
+      - DBPORT=${DBPORT}
+      - DBNAME=${DBNAME}
+      # - RHOST=cache
+      # - RPORT=6379
+      # - RPASSWORD=rpassword
+      # - MUSER=root
+      # - MPASSWORD=example
+      # - MHOST=mongo
+      # - MPORT=27017
     ports:
-      - "8000:8000"
+      - '8000:8000'
+    networks:
+      - mynet
 
-# Define networks
 networks:
-  domain:
+  mynet:
+    driver: bridge
