@@ -41,7 +41,7 @@ jobs:
           username: ${{secrets.USERNAME}}
           key: ${{secrets.KEY}}
           port: ${{secrets.PORT}}
-          envs: DB_USER, DB_PASS
+          envs: DB_USER, DB_PASS, DBPORT, DBNAME
           script: |
             export DBUSER=$DB_USER
             export DBPASS=$DB_PASS
