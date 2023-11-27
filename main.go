@@ -46,7 +46,10 @@ func main() {
 	e := echo.New()
 	config := configs.InitConfig()
 
-	var db = database.InitDB(*config)
+	db, err := database.InitDB(*config)
+	if err != nil {
+		e.Logger.Fatal("cannot run database, ", err.Error())
+	}
 	database.Migrate(db)
 
 	var mt = midtrans.NewMidtrans(*config, dataTransactions.New(db))
@@ -97,6 +100,8 @@ func main() {
 	routes.RouteMedicalCheckup(e, medicalCheckupHandler, *config)
 	routes.RouteMedicalCheckupDetail(e, medicalCheckupDetailHandler, *config)
 	routes.RouteTransaction(e, transactionHandler, *config)
+
+	e.Logger.Debug(db)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", config.ServerPort)).Error())
 }
