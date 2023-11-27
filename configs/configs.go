@@ -74,7 +74,7 @@ func loadConfig() *ProgramConfig {
 			permit = false
 		}
 
-		res.DBPORT = uint16(cnv)
+		res.DBPort = uint16(cnv)
 	} else {
 		permit = false
 	}
