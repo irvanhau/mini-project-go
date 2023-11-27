@@ -76,7 +76,7 @@ func (mh *MedicineHandler) CreateMedicine() echo.HandlerFunc {
 
 		formHeaderPhoto, err := c.FormFile("photo")
 		if err != nil {
-			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Select a file to upload", nil))
+			return c.JSON(http.StatusBadRequest, helper.FormatResponse("Select a photo to upload", nil))
 		}
 
 		formHeaderFile, err := c.FormFile("file")
