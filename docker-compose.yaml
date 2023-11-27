@@ -24,6 +24,7 @@ services:
       - DBHOST=db
       - DBPORT=${DBPORT}
       - DBNAME=${DBNAME}
+      - SERVER=${SERVER}
     ports:
       - '8000:8000'
     networks:
