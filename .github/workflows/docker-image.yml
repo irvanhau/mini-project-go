@@ -8,36 +8,41 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Login to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{secrets.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Build and push
+      - name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
           push: true
           tags: ${{secrets.DOCKERHUB_USERNAME}}/imgsimk:latest 
-      -
-        name: connect ssh
+      - name: connect ssh
         uses: appleboy/ssh-action@v0.1.9
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          DBPORT: ${{ secrets.DB_PORT }}
+          DBNAME: ${{ secrets.DB_NAME }}
         with:
           host: ${{secrets.HOST}}
           username: ${{secrets.USERNAME}}
           key: ${{secrets.KEY}}
           port: ${{secrets.PORT}}
+          envs: DB_USER, DB_PASS, DBPORT, DBNAME
           script: |
-            docker stop ${{secrets.CNAME}}
-            docker rm ${{secrets.CNAME}}
-            docker rmi ${{secrets.DOCKERHUB_USERNAME}}/imgsimk
-            docker run --name ${{secrets.CNAME}} -p 8000:8000 -d -e DBHOST=${{secrets.DB_HOST}} -e DBPORT=3306 -e DBUSER=${{secrets.DB_USER}} -e DBNAME=${{secrets.DB_NAME}} -e DBPASS=${{secrets.DB_PASS}} -e SECRET=${{secrets.JWT_SECRET}} -e REFSECRET=${{secrets.REF_SECRET}} -e MT_SERVER_KEY=${{secrets.MT_SERVER_KEY}} -e MT_CLIENT_KEY=${{secrets.MT_CLIENT_KEY}} -e CLOUDINARY_API_KEY=${{secrets.CLOUDINARY_API_KEY}} -e CLOUDINARY_CLOUD_NAME=${{secrets.CLOUDINARY_CLOUD_NAME}} -e CLOUDINARY_API_SECRET=${{secrets.CLOUDINARY_API_SECRET}} -e CLOUDINARY_UPLOAD_FOLDER=${{secrets.CLOUDINARY_UPLOAD_FOLDER}} -e SERVER=8000 ${{secrets.DOCKERHUB_USERNAME}}/imgsimk
+            export DBUSER=$DB_USER
+            export DBPASS=$DB_PASS
+            export DBPORT=$DBPORT
+            export DBNAME=$DBNAME
+            cd mini-project-go
+            git pull origin main
+            docker compose down -v
+            docker compose up -d
