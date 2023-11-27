@@ -31,7 +31,7 @@ jobs:
           DB_PASS: ${{ secrets.DB_PASS }}
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_NAME: ${{ secrets.DB_NAME }}
-          SERVER: ${{ secrets.SERVER }}
+          SERVER_PORT: ${{ secrets.SERVER }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           REF_SECRET: ${{ secrets.REF_SECRET }}
           MT_CLIENT_KEY: ${{ secrets.MT_CLIENT_KEY }}
@@ -45,13 +45,13 @@ jobs:
           username: ${{secrets.USERNAME}}
           key: ${{secrets.KEY}}
           port: ${{secrets.PORT}}
-          envs: DB_USER, DB_PASS, DB_PORT, DB_NAME,SERVER,JWT_SECRET,REF_SECRET,MT_CLIENT_KEY,MT_SERVER_KEY,CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,CLOUDINARY_UPLOAD_FOLDER
+          envs: DB_USER, DB_PASS, DB_PORT, DB_NAME,SERVER_PORT,JWT_SECRET,REF_SECRET,MT_CLIENT_KEY,MT_SERVER_KEY,CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,CLOUDINARY_UPLOAD_FOLDER
           script: |
             export DBUSER=$DB_USER
             export DBPASS=$DB_PASS
             export DBPORT=$DB_PORT
             export DBNAME=$DB_NAME
-            export SERVER=$SERVER
+            export SERVER=$SERVER_PORT
             export SECRET=$JWT_SECRET
             export REFSECRET=$REF_SECRET
             export MT_CLIENT_KEY=$MT_CLIENT_KEY
