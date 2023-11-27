@@ -10,7 +10,7 @@ import (
 
 type ProgramConfig struct {
 	ServerPort      int
-	DBPort          int
+	DBPort          uint16
 	DBHost          string
 	DBUser          string
 	DBPass          string
@@ -68,12 +68,13 @@ func loadConfig() *ProgramConfig {
 	}
 
 	if val, found := os.LookupEnv("DBPORT"); found {
-		port, err := strconv.Atoi(val)
+		cnv, err := strconv.Atoi(val)
 		if err != nil {
 			logrus.Error("Config : Invalid Port Value, ", err.Error())
 			permit = false
 		}
-		res.DBPort = port
+
+		data.DBPORT = uint16(cnv)
 	} else {
 		permit = false
 	}
