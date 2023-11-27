@@ -40,7 +40,6 @@ func InitConfig() *ProgramConfig {
 func readData() *ProgramConfig {
 	var data = new(ProgramConfig)
 
-<<<<<<< HEAD
 	data = loadConfig()
 
 	if data == nil {
@@ -56,14 +55,6 @@ func readData() *ProgramConfig {
 func loadConfig() *ProgramConfig {
 	var res = new(ProgramConfig)
 	var permit = true
-=======
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		logrus.Error("Config : Cannot load config file, ", err.Error())
-		return nil
-	}
->>>>>>> e57ef60ee5fa38f86220564d2f80a2908eb1e0c6
 
 	if val, found := os.LookupEnv("SERVER"); found {
 		port, err := strconv.Atoi(val)
@@ -113,53 +104,53 @@ func loadConfig() *ProgramConfig {
 
 	if val, found := os.LookupEnv("SECRET"); found {
 		res.Secret = val
-	}else{
+	} else {
 		permit = false
 	}
 
 	if val, found := os.LookupEnv("REFSECRET"); found {
 		res.RefSecret = val
-	}else{
+	} else {
 		permit = false
 	}
 
 	if val, found := os.LookupEnv("MT_SERVER_KEY"); found {
 		res.MTServerKey = val
-	}else{
+	} else {
 		permit = false
 	}
 
 	if val, found := os.LookupEnv("MT_CLIENT_KEY"); found {
 		res.MTClientKey = val
-	}else{
+	} else {
 		permit = false
 	}
 
 	if val, found := os.LookupEnv("CLOUDINARY_CLOUD_NAME"); found {
 		res.CloudName = val
-	}else{
+	} else {
 		permit = false
 	}
 
 	if val, found := os.LookupEnv("CLOUDINARY_API_KEY"); found {
 		res.CloudAPIKey = val
-	}else{
+	} else {
 		permit = false
 	}
 
 	if val, found := os.LookupEnv("CLOUDINARY_API_SECRET"); found {
 		res.CloudAPISecret = val
-	}else{
+	} else {
 		permit = false
 	}
 
 	if val, found := os.LookupEnv("CLOUDINARY_UPLOAD_FOLDER"); found {
 		res.CloudFolderName = val
-	}else{
+	} else {
 		permit = false
 	}
 
-	if !permit{
+	if !permit {
 		return nil
 	}
 
