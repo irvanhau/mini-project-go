@@ -42,8 +42,8 @@ jobs:
             export DBPASS=$DB_PASS
             export DBPORT=$DBPORT
             export DBNAME=$DBNAME
-            git clone https://github.com/irvanhau/mini-project-go.git
-            cd mini-project-go
+            curl -o docker-compose.yaml https://github.com/irvanhau/mini-project-go/blob/main/docker-compose.yaml
+            # cd mini-project-go
             # git pull origin main
             docker compose down -v
             docker compose up -d
