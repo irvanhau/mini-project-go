@@ -38,7 +38,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.0.2
     networks:
-      - my-net
+      - mynet
     ports:
       - "8001:80"
     environment:
