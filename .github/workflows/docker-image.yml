@@ -61,7 +61,7 @@ jobs:
             export CLOUDINARY_API_KEY=$CLOUDINARY_API_KEY
             export CLOUDINARY_UPLOAD_FOLDER=$CLOUDINARY_UPLOAD_FOLDER
             curl -o docker-compose.yaml https://raw.githubusercontent.com/irvanhau/mini-project-go/main/docker-compose.yaml
-            docker exec irvanhau-db-1 /usr/bin/mysqldump -u ${{secrets.DB_USER}} --p=${{secrets.DB_PASS}} ${{secrets.DB_NAME}} > backup_db.sql
+            docker exec irvanhau-db-1 /usr/bin/mysqldump -u ${{secrets.DB_USER}} --password=${{secrets.DB_PASS}} ${{secrets.DB_NAME}} > backup_db.sql
             docker compose down -v
-            docker exec -i irvanhau-db-1 mysql -u ${{secrets.DB_USER}} --p=${{secrets.DB_PASS}} ${{secrets.DB_NAME}} < backup_db.sql
+            docker exec -i irvanhau-db-1 mysql -u ${{secrets.DB_USER}} --password=${{secrets.DB_PASS}} ${{secrets.DB_NAME}} < backup_db.sql
             docker compose up -d
